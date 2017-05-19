@@ -2,8 +2,10 @@ package main
 
 import (
 	"io"
+	"io/ioutil"
 	"log"
 	"os"
+	"path/filepath"
 	"strings"
 
 	download "github.com/joeybloggs/go-download"
@@ -35,6 +37,16 @@ func main() {
 		log.Fatal(err)
 	}
 	defer f.Close()
+	// read the whole file at once
+	b, err := ioutil.ReadAll(f)
+	if err != nil {
+		panic(err)
+	}
 
-	// f implements io.Reader, write file somewhere or do some other sort of work with it
+	err = ioutil.WriteFile(filepath.Base(downloadurl), b, 0644)
+	if err != nil {
+		log.Println(err)
+		os.Exit(111)
+
+	}
 }
